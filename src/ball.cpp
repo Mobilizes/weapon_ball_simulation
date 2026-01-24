@@ -1,5 +1,7 @@
 #include "ball.hpp"
 
+#include "constants.hpp"
+
 #include <raymath.h>
 
 #include <stdexcept>
@@ -42,7 +44,8 @@ void Ball::respond_collision(Line & other)
     0.0, 1.0);
 
   Vector2 closest = other.pos_start * (1 - t) + other.pos_end * t;
-  Vector2 normal = Vector2Normalize(pos - closest);
+  Vector2 diff = pos - closest;
+  Vector2 normal = Vector2Normalize(diff);
 
   Vector2 next_vel = vel - Vector2Scale(normal, 2.0 * Vector2DotProduct(vel, normal));
   set_next_vel(next_vel);

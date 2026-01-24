@@ -1,5 +1,8 @@
 #pragma once
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 800.0f
+#define WINDOW_HEIGHT 600.0f
 #define TARGET_FPS 144
+
+#define UNIFORM_PARTITION_ROW 2
+#define UNIFORM_PARTITION_COL 2
