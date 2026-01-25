@@ -18,8 +18,9 @@ Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel) : Object()
 
 void Ball::update(float dt)
 {
+  set_next_vel({get_next_vel().x, get_next_vel().y + GRAVITY * dt});
   update_vel();
-  pos += vel * dt;
+  pos += get_vel() * dt;
 }
 
 void Ball::draw() { DrawCircleV(pos, radius, color); }

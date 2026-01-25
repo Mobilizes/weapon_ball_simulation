@@ -14,12 +14,14 @@ int main(void)
   InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib [core] example - basic window");
   SetTargetFPS(TARGET_FPS);
 
-  std::vector<Ball> balls = {Ball({300, 300}, 40, {255, 0, 0, 255}, {200, 50}),
-    Ball({600, 300}, 40, {0, 0, 255, 255}, {-200, 0})};
-  std::vector<Line> lines = {Line({100, 100}, {100, 500}, 4, {0, 0, 0, 255}),
+  std::vector<Ball> balls = {Ball({300, 300}, 30, {255, 0, 0, 255}, {100, 50}),
+    Ball({600, 300}, 30, {0, 0, 255, 255}, {-100, 0})};
+  std::vector<Line> lines = {
+    Line({100, 100}, {100, 500}, 4, {0, 0, 0, 255}),
     Line({700, 100}, {700, 500}, 4, {0, 0, 0, 255}),
     Line({100, 100}, {700, 100}, 4, {0, 0, 0, 255}),
-    Line({100, 500}, {700, 500}, 4, {0, 0, 0, 255})};
+    Line({100, 500}, {700, 500}, 4, {0, 0, 0, 255}),
+  };
 
   while (!WindowShouldClose()) {
     ClearBackground(RAYWHITE);
@@ -76,21 +78,6 @@ int main(void)
         }
       }
     }
-
-    // for (Ball & ball : balls) {
-    //   for (Line & other : lines) {
-    //     if (ball.is_colliding(other)) {
-    //       ball.respond_collision(other);
-    //     }
-    //   }
-    //
-    //   for (Ball & other : balls) {
-    //     if (&ball == &other) continue;
-    //     if (ball.is_colliding(other)) {
-    //       ball.respond_collision(other);
-    //     }
-    //   }
-    // }
 
     for (int row = 0; row < UNIFORM_PARTITION_ROW; ++row) {
       for (int col = 0; col < UNIFORM_PARTITION_COL; ++col) {
