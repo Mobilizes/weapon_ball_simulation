@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BALL_HPP
+#define BALL_HPP
 
 #include "object.hpp"
 #include "line.hpp"
@@ -35,3 +36,5 @@ private:
   Vector2 next_vel;
   Vector2 vel;
 };
+
+#endif  // BALL_HPP

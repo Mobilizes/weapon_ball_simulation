@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONSTANTS_HPP
+#define CONSTANTS_HPP
 
 #define WINDOW_WIDTH 800.0f
 #define WINDOW_HEIGHT 600.0f
@@ -8,3 +9,5 @@
 
 #define UNIFORM_PARTITION_ROW 2
 #define UNIFORM_PARTITION_COL 2
+
+#endif  // CONSTANTS_HPP

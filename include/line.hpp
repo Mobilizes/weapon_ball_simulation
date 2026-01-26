@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LINE_HPP
+#define LINE_HPP
 
 #include "object.hpp"
 
@@ -18,3 +19,5 @@ public:
   float width;
   Color color;
 };
+
+#endif  // LINE_HPP

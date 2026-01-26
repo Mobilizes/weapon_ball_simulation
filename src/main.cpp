@@ -84,9 +84,9 @@ int main(void)
         if (ball_partition[row][col].size() + line_partition[row][col].size() < 2) continue;
 
         for (Ball * ball : ball_partition[row][col]) {
-          for (Line other : lines) {
-            if (ball->is_colliding(other)) {
-              ball->respond_collision(other);
+          for (Line * other : line_partition[row][col]) {
+            if (ball->is_colliding(*other)) {
+              ball->respond_collision(*other);
             }
           }
 
