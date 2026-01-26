@@ -5,7 +5,9 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#include <chrono>
 #include <iostream>
+#include <random>
 #include <vector>
 
 int main(void)
@@ -15,13 +17,22 @@ int main(void)
   SetTargetFPS(TARGET_FPS);
 
   std::vector<Ball> balls = {Ball({300, 300}, 30, {255, 0, 0, 255}, {100, 50}),
-    Ball({600, 300}, 30, {0, 0, 255, 255}, {-100, 0})};
+    Ball({500, 300}, 30, {0, 0, 255, 255}, {-100, 0})};
   std::vector<Line> lines = {
-    Line({100, 100}, {100, 500}, 4, {0, 0, 0, 255}),
-    Line({700, 100}, {700, 500}, 4, {0, 0, 0, 255}),
-    Line({100, 100}, {700, 100}, 4, {0, 0, 0, 255}),
-    Line({100, 500}, {700, 500}, 4, {0, 0, 0, 255}),
+    Line({200, 100}, {200, 500}, 4, {0, 0, 0, 255}),
+    Line({600, 100}, {600, 500}, 4, {0, 0, 0, 255}),
+    Line({200, 100}, {600, 100}, 4, {0, 0, 0, 255}),
+    Line({200, 500}, {600, 500}, 4, {0, 0, 0, 255}),
   };
+
+  // std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+  // for (int i = 0; i < 1000; ++i) {
+  //   balls.push_back(Ball({std::uniform_real_distribution<float>(250, 550)(rng),
+  //                          std::uniform_real_distribution<float>(150, 450)(rng)},
+  //     3, {0, 255, 0, 255},
+  //     {std::uniform_real_distribution<float>(-100, 100)(rng),
+  //       std::uniform_real_distribution<float>(-100, 100)(rng)}));
+  // }
 
   while (!WindowShouldClose()) {
     ClearBackground(RAYWHITE);
@@ -41,18 +52,18 @@ int main(void)
 
     for (Ball & ball : balls) {
       for (float row_axis = 0, row = 0; row < UNIFORM_PARTITION_ROW; row_axis += row_inc, ++row) {
-        if (!((ball.pos.y - ball.radius >= row_axis &&
-                ball.pos.y - ball.radius <= row_axis + row_inc) ||
-              (ball.pos.y + ball.radius >= row_axis &&
-                ball.pos.y + ball.radius <= row_axis + row_inc))) {
+        if (!((ball.get_pos().y - ball.radius >= row_axis &&
+                ball.get_pos().y - ball.radius <= row_axis + row_inc) ||
+              (ball.get_pos().y + ball.radius >= row_axis &&
+                ball.get_pos().y + ball.radius <= row_axis + row_inc))) {
           continue;
         }
 
         for (float col_axis = 0, col = 0; col < UNIFORM_PARTITION_COL; col_axis += col_inc, ++col) {
-          if (!((ball.pos.x - ball.radius >= col_axis &&
-                  ball.pos.x - ball.radius <= col_axis + col_inc) ||
-                (ball.pos.x + ball.radius >= col_axis &&
-                  ball.pos.x + ball.radius <= col_axis + col_inc))) {
+          if (!((ball.get_pos().x - ball.radius >= col_axis &&
+                  ball.get_pos().x - ball.radius <= col_axis + col_inc) ||
+                (ball.get_pos().x + ball.radius >= col_axis &&
+                  ball.get_pos().x + ball.radius <= col_axis + col_inc))) {
             continue;
           }
 
@@ -99,15 +110,6 @@ int main(void)
         }
       }
     }
-
-    for (int row = 0; row < UNIFORM_PARTITION_ROW; ++row) {
-      for (int col = 0; col < UNIFORM_PARTITION_COL; ++col) {
-        std::cout << ball_partition[row][col].size() << "+" << line_partition[row][col].size()
-                  << " ";
-      }
-      std::cout << std::endl;
-    }
-    std::cout << std::endl;
 
     BeginDrawing();
 

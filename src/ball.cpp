@@ -12,18 +12,37 @@ Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel) : Object()
   this->radius = radius;
   this->color = color;
 
+  this->next_pos = pos;
+
   this->vel = vel;
   this->next_vel = vel;
 }
 
 void Ball::update(float dt)
 {
-  set_next_vel({get_next_vel().x, get_next_vel().y + GRAVITY * dt});
+  float max_vel_x = MAX_VEL_X == 0 ? MAXFLOAT : MAX_VEL_X;
+  float max_vel_y = MAX_VEL_Y == 0 ? MAXFLOAT : MAX_VEL_Y;
+
+  next_vel.x = Clamp(next_vel.x, -max_vel_x, max_vel_x);
+  next_vel.y = Clamp(next_vel.y + GRAVITY * dt, -max_vel_y, max_vel_y);
   update_vel();
-  pos += get_vel() * dt;
+
+  next_pos += vel * dt;
+  update_pos();
 }
 
-void Ball::draw() { DrawCircleV(pos, radius, color); }
+void Ball::draw()
+{
+  if (out_of_bounds()) return;
+
+  DrawCircleV(pos, radius, color);
+}
+
+bool Ball::out_of_bounds()
+{
+  return pos.x < -radius || pos.x > WINDOW_WIDTH + radius || pos.y < -radius ||
+         pos.y > WINDOW_HEIGHT + radius;
+}
 
 bool Ball::is_colliding(Line & other)
 {
@@ -48,8 +67,7 @@ void Ball::respond_collision(Line & other)
   Vector2 diff = pos - closest;
   Vector2 normal = Vector2Normalize(diff);
 
-  Vector2 next_vel = vel - Vector2Scale(normal, 2.0 * Vector2DotProduct(vel, normal));
-  set_next_vel(next_vel);
+  next_vel = vel - Vector2Scale(normal, 2.0 * Vector2DotProduct(vel, normal));
 }
 
 bool Ball::is_colliding(Ball & other)
@@ -67,14 +85,18 @@ void Ball::respond_collision(Ball & other)
     throw std::runtime_error("Ball responding collision to non-colliding ball!");
   }
 
-  Vector2 next_vel =
-    this->get_next_vel() -
-    Vector2Scale(Vector2Scale(pos - other.pos, Vector2DotProduct(vel - other.vel, pos - other.pos) /
-                                                   Vector2LengthSqr(pos - other.pos) +
-                                                 EPSILON),
-      (2 * other.mass) / (mass + other.mass + EPSILON));
-  set_next_vel(next_vel);
+  next_vel = vel - Vector2Scale(Vector2Scale(pos - other.pos,
+                                  Vector2DotProduct(vel - other.vel, pos - other.pos) /
+                                      Vector2LengthSqr(pos - other.pos) +
+                                    EPSILON),
+                     (2 * other.mass) / (mass + other.mass + EPSILON));
 }
+
+Vector2 Ball::get_pos() { return pos; }
+void Ball::update_pos() { pos = next_pos; }
+
+Vector2 Ball::get_next_pos() { return next_pos; }
+void Ball::set_next_pos(Vector2 next_pos) { this->next_pos = next_pos; }
 
 Vector2 Ball::get_vel() { return vel; }
 void Ball::update_vel() { vel = next_vel; }
