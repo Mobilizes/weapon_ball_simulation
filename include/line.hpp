@@ -6,7 +6,7 @@
 class Line : public Object
 {
 public:
-  explicit Line(Vector2 pos_start, Vector2 pos_end, float width, Color color);
+  Line(Vector2 pos_start, Vector2 pos_end, float width, Color color);
 
   void update(float dt) override;
   void draw() override;

@@ -6,10 +6,13 @@
 
 #include <raymath.h>
 
+#include <random>
+
 class Ball : public Object
 {
 public:
-  explicit Ball(Vector2 pos, float radius, Color color, Vector2 vel = Vector2Zero());
+  Ball(Vector2 pos, float radius, Color color, Vector2 vel = Vector2Zero());
+  Ball(Vector2 pos, float radius, Color color, std::mt19937 & rng);
 
   void update(float dt) override;
   void draw() override;

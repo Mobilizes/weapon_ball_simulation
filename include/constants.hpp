@@ -3,7 +3,7 @@
 
 #define WINDOW_WIDTH 800.0f
 #define WINDOW_HEIGHT 600.0f
-#define TARGET_FPS 1000
+#define TARGET_FPS 144
 
 #define GRAVITY 980.f
 #define MAX_VEL_X 0

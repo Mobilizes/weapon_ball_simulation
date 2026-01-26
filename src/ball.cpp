@@ -14,6 +14,15 @@ Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel) : Object()
   this->vel = vel;
 }
 
+Ball::Ball(Vector2 pos, float radius, Color color, std::mt19937 & rng) : Object()
+{
+  this->pos = pos;
+  this->radius = radius;
+  this->color = color;
+  this->vel = {std::uniform_real_distribution<float>(-100, 100)(rng),
+    std::uniform_real_distribution<float>(-100, 100)(rng)};
+}
+
 void Ball::update(float dt)
 {
   float max_vel_x = MAX_VEL_X == 0 ? MAXFLOAT : MAX_VEL_X;
@@ -53,15 +62,20 @@ void Ball::respond_collision(Line & other)
     throw std::runtime_error("Ball responding collision to non-colliding line!");
   }
 
-  float t = Clamp(
-    Vector2DotProduct(pos - other.pos_start, other.pos_end - other.pos_start) / other.length_sqr(),
+  float t = Clamp(Vector2DotProduct(pos - other.pos_start, other.pos_end - other.pos_start) /
+                    (other.length_sqr() + EPSILON),
     0.0, 1.0);
 
   Vector2 closest = other.pos_start * (1 - t) + other.pos_end * t;
   Vector2 diff = pos - closest;
   Vector2 normal = Vector2Normalize(diff);
 
-  vel = vel - Vector2Scale(normal, 2.0 * Vector2DotProduct(vel, normal));
+  float dot = Vector2DotProduct(vel, normal);
+
+  if (dot < 0) {
+    vel = vel - Vector2Scale(normal, 2.0 * dot);
+  }
+
   pos = pos + Vector2Scale(normal, radius - Vector2Length(diff));
 }
 

@@ -5,7 +5,6 @@
 #include <raylib.h>
 #include <raymath.h>
 
-#include <chrono>
 #include <iostream>
 #include <random>
 #include <vector>
@@ -16,25 +15,18 @@ int main(void)
   InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib [core] example - basic window");
   SetTargetFPS(TARGET_FPS);
 
-  std::vector<Ball> balls = {Ball({300, 300}, 30, {255, 0, 0, 255}, {100, 50}),
-    Ball({500, 300}, 30, {0, 0, 255, 255}, {-100, 0})};
+  std::random_device rd;
+  std::mt19937 rng(rd());
+
+  std::vector<Ball> balls = {
+    Ball({300, 300}, 30, {255, 0, 0, 255}, rng), Ball({500, 300}, 30, {0, 0, 255, 255}, rng)};
 
   std::vector<Line> lines = {
     Line({200, 100}, {200, 500}, 4, {0, 0, 0, 255}),
     Line({600, 100}, {600, 500}, 4, {0, 0, 0, 255}),
     Line({200, 100}, {600, 100}, 4, {0, 0, 0, 255}),
     Line({200, 500}, {600, 500}, 4, {0, 0, 0, 255}),
-    Line({400, 100}, {400, 500}, 4, {0, 0, 0, 255}),
   };
-
-  // std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-  // for (int i = 0; i < 1000; ++i) {
-  //   balls.push_back(Ball({std::uniform_real_distribution<float>(250, 550)(rng),
-  //                          std::uniform_real_distribution<float>(150, 450)(rng)},
-  //     3, {0, 255, 0, 255},
-  //     {std::uniform_real_distribution<float>(-100, 100)(rng),
-  //       std::uniform_real_distribution<float>(-100, 100)(rng)}));
-  // }
 
   while (!WindowShouldClose()) {
     ClearBackground(RAYWHITE);
