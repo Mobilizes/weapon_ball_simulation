@@ -11,11 +11,7 @@ Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel) : Object()
   this->pos = pos;
   this->radius = radius;
   this->color = color;
-
-  this->next_pos = pos;
-
   this->vel = vel;
-  this->next_vel = vel;
 }
 
 void Ball::update(float dt)
@@ -23,12 +19,10 @@ void Ball::update(float dt)
   float max_vel_x = MAX_VEL_X == 0 ? MAXFLOAT : MAX_VEL_X;
   float max_vel_y = MAX_VEL_Y == 0 ? MAXFLOAT : MAX_VEL_Y;
 
-  next_vel.x = Clamp(next_vel.x, -max_vel_x, max_vel_x);
-  next_vel.y = Clamp(next_vel.y + GRAVITY * dt, -max_vel_y, max_vel_y);
-  update_vel();
+  vel.x = Clamp(vel.x, -max_vel_x, max_vel_x);
+  vel.y = Clamp(vel.y + GRAVITY * dt, -max_vel_y, max_vel_y);
 
-  next_pos += vel * dt;
-  update_pos();
+  pos += vel * dt;
 }
 
 void Ball::draw()
@@ -67,7 +61,8 @@ void Ball::respond_collision(Line & other)
   Vector2 diff = pos - closest;
   Vector2 normal = Vector2Normalize(diff);
 
-  next_vel = vel - Vector2Scale(normal, 2.0 * Vector2DotProduct(vel, normal));
+  vel = vel - Vector2Scale(normal, 2.0 * Vector2DotProduct(vel, normal));
+  pos = pos + Vector2Scale(normal, radius - Vector2Length(diff));
 }
 
 bool Ball::is_colliding(Ball & other)
@@ -85,21 +80,22 @@ void Ball::respond_collision(Ball & other)
     throw std::runtime_error("Ball responding collision to non-colliding ball!");
   }
 
-  next_vel = vel - Vector2Scale(Vector2Scale(pos - other.pos,
-                                  Vector2DotProduct(vel - other.vel, pos - other.pos) /
-                                      Vector2LengthSqr(pos - other.pos) +
-                                    EPSILON),
-                     (2 * other.mass) / (mass + other.mass + EPSILON));
+  Vector2 temp_vel = vel;
+
+  vel = vel - Vector2Scale(
+                Vector2Scale(pos - other.pos, Vector2DotProduct(vel - other.vel, pos - other.pos) /
+                                                  Vector2LengthSqr(pos - other.pos) +
+                                                EPSILON),
+                (2 * other.mass) / (mass + other.mass + EPSILON));
+  other.vel = other.vel - Vector2Scale(Vector2Scale(other.pos - pos,
+                                         Vector2DotProduct(other.vel - temp_vel, other.pos - pos) /
+                                             Vector2LengthSqr(other.pos - pos) +
+                                           EPSILON),
+                            (2 * mass) / (mass + other.mass + EPSILON));
+
+  float mass_ratio = other.mass / (mass + other.mass + EPSILON);
+  float penetration = radius + other.radius - Vector2Length(pos - other.pos);
+
+  pos += Vector2Scale(Vector2Normalize(pos - other.pos), penetration * mass_ratio);
+  other.pos -= Vector2Scale(Vector2Normalize(pos - other.pos), penetration * (1 - mass_ratio));
 }
-
-Vector2 Ball::get_pos() { return pos; }
-void Ball::update_pos() { pos = next_pos; }
-
-Vector2 Ball::get_next_pos() { return next_pos; }
-void Ball::set_next_pos(Vector2 next_pos) { this->next_pos = next_pos; }
-
-Vector2 Ball::get_vel() { return vel; }
-void Ball::update_vel() { vel = next_vel; }
-
-Vector2 Ball::get_next_vel() { return next_vel; }
-void Ball::set_next_vel(Vector2 next_vel) { this->next_vel = next_vel; }

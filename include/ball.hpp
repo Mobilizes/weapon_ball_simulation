@@ -22,28 +22,13 @@ public:
   bool is_colliding(Ball & other);
   void respond_collision(Ball & other);
 
-  Vector2 get_pos();
-  void update_pos();
-  Vector2 get_next_pos();
-  void set_next_pos(Vector2 next_pos);
-
-  Vector2 get_vel();
-  void update_vel();
-  Vector2 get_next_vel();
-  void set_next_vel(Vector2 next_vel);
-
   float mass = 100;
 
+  Vector2 pos;
+  Vector2 vel;
   float radius;
 
   Color color;
-
-private:
-  Vector2 pos;
-  Vector2 next_pos;
-
-  Vector2 vel;
-  Vector2 next_vel;
 };
 
 #endif  // BALL_HPP

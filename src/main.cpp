@@ -18,11 +18,13 @@ int main(void)
 
   std::vector<Ball> balls = {Ball({300, 300}, 30, {255, 0, 0, 255}, {100, 50}),
     Ball({500, 300}, 30, {0, 0, 255, 255}, {-100, 0})};
+
   std::vector<Line> lines = {
     Line({200, 100}, {200, 500}, 4, {0, 0, 0, 255}),
     Line({600, 100}, {600, 500}, 4, {0, 0, 0, 255}),
     Line({200, 100}, {600, 100}, 4, {0, 0, 0, 255}),
     Line({200, 500}, {600, 500}, 4, {0, 0, 0, 255}),
+    Line({400, 100}, {400, 500}, 4, {0, 0, 0, 255}),
   };
 
   // std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
@@ -47,44 +49,31 @@ int main(void)
     std::vector<std::vector<std::vector<Line *>>> line_partition(
       UNIFORM_PARTITION_ROW, std::vector<std::vector<Line *>>(UNIFORM_PARTITION_COL));
 
-    const int row_inc = ceil(WINDOW_HEIGHT / UNIFORM_PARTITION_ROW);
-    const int col_inc = ceil(WINDOW_WIDTH / UNIFORM_PARTITION_COL);
-
     for (Ball & ball : balls) {
-      for (float row_axis = 0, row = 0; row < UNIFORM_PARTITION_ROW; row_axis += row_inc, ++row) {
-        if (!((ball.get_pos().y - ball.radius >= row_axis &&
-                ball.get_pos().y - ball.radius <= row_axis + row_inc) ||
-              (ball.get_pos().y + ball.radius >= row_axis &&
-                ball.get_pos().y + ball.radius <= row_axis + row_inc))) {
-          continue;
-        }
+      int start_row = std::max(0, (int)((ball.pos.y - ball.radius) / ROW_INC));
+      int end_row =
+        std::min(UNIFORM_PARTITION_ROW - 1, (int)((ball.pos.y + ball.radius) / ROW_INC));
 
-        for (float col_axis = 0, col = 0; col < UNIFORM_PARTITION_COL; col_axis += col_inc, ++col) {
-          if (!((ball.get_pos().x - ball.radius >= col_axis &&
-                  ball.get_pos().x - ball.radius <= col_axis + col_inc) ||
-                (ball.get_pos().x + ball.radius >= col_axis &&
-                  ball.get_pos().x + ball.radius <= col_axis + col_inc))) {
-            continue;
-          }
+      int start_col = std::max(0, (int)((ball.pos.x - ball.radius) / COL_INC));
+      int end_col =
+        std::min(UNIFORM_PARTITION_COL - 1, (int)((ball.pos.x + ball.radius) / COL_INC));
 
+      for (int row = start_row; row <= end_row; ++row) {
+        for (int col = start_col; col <= end_col; ++col) {
           ball_partition[row][col].push_back(&ball);
         }
       }
     }
 
     for (Line & line : lines) {
-      for (float row_axis = 0, row = 0; row < UNIFORM_PARTITION_ROW; row_axis += row_inc, ++row) {
-        if ((line.pos_start.y < row_axis && line.pos_end.y < row_axis) ||
-            (line.pos_start.y > row_axis + row_inc && line.pos_end.y > row_axis + row_inc)) {
-          continue;
-        }
+      int start_row = std::min(line.pos_start.y / ROW_INC, line.pos_end.y / ROW_INC);
+      int end_row = std::max(line.pos_start.y / ROW_INC, line.pos_end.y / ROW_INC);
 
-        for (float col_axis = 0, col = 0; col < UNIFORM_PARTITION_COL; col_axis += col_inc, ++col) {
-          if ((line.pos_start.x < col_axis && line.pos_end.x < col_axis) ||
-              (line.pos_start.x > col_axis + col_inc && line.pos_end.x > col_axis + col_inc)) {
-            continue;
-          }
+      int start_col = std::min(line.pos_start.x / COL_INC, line.pos_end.x / COL_INC);
+      int end_col = std::max(line.pos_start.x / COL_INC, line.pos_end.x / COL_INC);
 
+      for (int row = start_row; row <= end_row; ++row) {
+        for (int col = start_col; col <= end_col; ++col) {
           line_partition[row][col].push_back(&line);
         }
       }
@@ -94,15 +83,18 @@ int main(void)
       for (int col = 0; col < UNIFORM_PARTITION_COL; ++col) {
         if (ball_partition[row][col].size() + line_partition[row][col].size() < 2) continue;
 
-        for (Ball * ball : ball_partition[row][col]) {
+        for (int i = 0; i < ball_partition[row][col].size(); ++i) {
+          Ball * ball = ball_partition[row][col][i];
+
           for (Line * other : line_partition[row][col]) {
             if (ball->is_colliding(*other)) {
               ball->respond_collision(*other);
             }
           }
 
-          for (Ball * other : ball_partition[row][col]) {
-            if (ball == other) continue;
+          for (int j = i + 1; j < ball_partition[row][col].size(); ++j) {
+            Ball * other = ball_partition[row][col][j];
+
             if (ball->is_colliding(*other)) {
               ball->respond_collision(*other);
             }
@@ -113,12 +105,12 @@ int main(void)
 
     BeginDrawing();
 
-    for (float row_axis = 0, row = 0; row < UNIFORM_PARTITION_ROW; row_axis += row_inc, ++row) {
-      DrawLine(0, row_axis + row_inc, WINDOW_WIDTH, row_axis + row_inc, {0, 0, 0, 255});
+    for (float row_axis = 0, row = 0; row < UNIFORM_PARTITION_ROW; row_axis += ROW_INC, ++row) {
+      DrawLine(0, row_axis + ROW_INC, WINDOW_WIDTH, row_axis + ROW_INC, {0, 0, 0, 255});
     }
 
-    for (float col_axis = 0, col = 0; col < UNIFORM_PARTITION_COL; col_axis += col_inc, ++col) {
-      DrawLine(col_axis + col_inc, 0, col_axis + col_inc, WINDOW_HEIGHT, {0, 0, 0, 255});
+    for (float col_axis = 0, col = 0; col < UNIFORM_PARTITION_COL; col_axis += COL_INC, ++col) {
+      DrawLine(col_axis + COL_INC, 0, col_axis + COL_INC, WINDOW_HEIGHT, {0, 0, 0, 255});
     }
 
     for (Line & line : lines) {
