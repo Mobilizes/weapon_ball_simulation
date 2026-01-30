@@ -1,8 +1,8 @@
 #ifndef BALL_HPP
 #define BALL_HPP
 
-#include "object.hpp"
-#include "line.hpp"
+#include "weapon_ball/object.hpp"
+#include "weapon_ball/line.hpp"
 
 #include <raymath.h>
 

@@ -1,7 +1,7 @@
 #ifndef LINE_HPP
 #define LINE_HPP
 
-#include "object.hpp"
+#include "weapon_ball/object.hpp"
 
 class Line : public Object
 {

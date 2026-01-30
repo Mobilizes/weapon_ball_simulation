@@ -1,6 +1,6 @@
-#include "ball.hpp"
+#include "weapon_ball/ball.hpp"
 
-#include "constants.hpp"
+#include "weapon_ball/constants.hpp"
 
 #include <raymath.h>
 

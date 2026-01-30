@@ -1,6 +1,6 @@
-#include "ball.hpp"
-#include "line.hpp"
-#include "constants.hpp"
+#include "weapon_ball/ball.hpp"
+#include "weapon_ball/constants.hpp"
+#include "weapon_ball/line.hpp"
 
 #include <raylib.h>
 #include <raymath.h>
@@ -19,7 +19,7 @@ int main(void)
   std::mt19937 rng(rd());
 
   std::vector<Ball> balls = {
-    Ball({300, 300}, 30, {255, 0, 0, 255}, rng), Ball({500, 300}, 30, {0, 0, 255, 255}, rng)};
+    Ball({300, 300}, 30, RED, rng), Ball({500, 300}, 30, BLUE, rng)};
 
   std::vector<Line> lines = {
     Line({200, 100}, {200, 500}, 4, {0, 0, 0, 255}),
@@ -96,14 +96,6 @@ int main(void)
     }
 
     BeginDrawing();
-
-    for (float row_axis = 0, row = 0; row < UNIFORM_PARTITION_ROW; row_axis += ROW_INC, ++row) {
-      DrawLine(0, row_axis + ROW_INC, WINDOW_WIDTH, row_axis + ROW_INC, {0, 0, 0, 255});
-    }
-
-    for (float col_axis = 0, col = 0; col < UNIFORM_PARTITION_COL; col_axis += COL_INC, ++col) {
-      DrawLine(col_axis + COL_INC, 0, col_axis + COL_INC, WINDOW_HEIGHT, {0, 0, 0, 255});
-    }
 
     for (Line & line : lines) {
       line.draw();
