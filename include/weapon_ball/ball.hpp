@@ -25,6 +25,8 @@ public:
   bool is_colliding(Ball & other);
   void respond_collision(Ball & other);
 
+  float get_kinetic_energy();
+
   float mass = 100;
 
   Vector2 pos;

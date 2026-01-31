@@ -4,6 +4,7 @@
 
 #include <raymath.h>
 
+#include <memory>
 #include <stdexcept>
 
 Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel) : Object()
@@ -110,6 +111,8 @@ void Ball::respond_collision(Ball & other)
   float mass_ratio = other.mass / (mass + other.mass + EPSILON);
   float penetration = radius + other.radius - Vector2Length(pos - other.pos);
 
-  pos += Vector2Scale(Vector2Normalize(pos - other.pos), penetration * mass_ratio);
-  other.pos -= Vector2Scale(Vector2Normalize(pos - other.pos), penetration * (1 - mass_ratio));
+  pos += Vector2Normalize(pos - other.pos) * penetration * mass_ratio;
+  other.pos -= Vector2Normalize(pos - other.pos) * penetration * (1 - mass_ratio);
 }
+
+float Ball::get_kinetic_energy() { return 0.5f * mass * Vector2Length(vel) * Vector2Length(vel); }
