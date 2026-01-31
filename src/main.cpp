@@ -1,13 +1,11 @@
-#include "weapon_ball/ball.hpp"
-#include "weapon_ball/constants.hpp"
-#include "weapon_ball/line.hpp"
-#include "weapon_ball/weapon.hpp"
+#include "weapon_ball/object/ball.hpp"
+#include "weapon_ball/object/line.hpp"
+#include "weapon_ball/object/weapon.hpp"
+#include "weapon_ball/utils/constants.hpp"
 
 #include <raylib.h>
 #include <raymath.h>
 
-#include <functional>
-#include <iostream>
 #include <memory>
 #include <random>
 #include <vector>
@@ -27,7 +25,7 @@ private:
 int main(void)
 {
   SetConfigFlags(FLAG_MSAA_4X_HINT);
-  InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib [core] example - basic window");
+  InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Weapon Ball (Raylib)");
   SetTargetFPS(TARGET_FPS);
 
   std::random_device rd;

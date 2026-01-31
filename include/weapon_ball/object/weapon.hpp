@@ -1,9 +1,9 @@
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
 
-#include "weapon_ball/object.hpp"
+#include "weapon_ball/object/object.hpp"
 
-#include "weapon_ball/ball.hpp"
+#include "weapon_ball/object/ball.hpp"
 
 #include <memory>
 #include <string>
@@ -20,19 +20,20 @@ public:
   void update(float dt) override;
   void draw() override;
 
-  void setSprite(const std::string & sprite_path);
+  void set_sprite(const std::string & sprite_path);
 
   float attack_power;
   float attack_speed;
 
   float padding = 5;
 
-  std::shared_ptr<Ball> bearer;
-
 private:
   Texture2D sprite;
 
+  std::shared_ptr<Ball> bearer;
+
   float angle;
+  bool clockwise_rotation;
 };
 
 #endif  // WEAPON_HPP

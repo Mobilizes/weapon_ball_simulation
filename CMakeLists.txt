@@ -5,8 +5,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(
   weapon_ball
-  "src/${PROJECT_NAME}/ball.cpp" "src/${PROJECT_NAME}/line.cpp"
-  "src/${PROJECT_NAME}/object.cpp" "src/${PROJECT_NAME}/weapon.cpp"
+  "src/${PROJECT_NAME}/object/ball.cpp" "src/${PROJECT_NAME}/object/line.cpp"
+  "src/${PROJECT_NAME}/object/object.cpp" "src/${PROJECT_NAME}/object/weapon.cpp"
   "src/main.cpp")
 
 add_custom_command(

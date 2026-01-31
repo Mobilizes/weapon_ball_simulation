@@ -1,18 +1,15 @@
-#include "weapon_ball/weapon.hpp"
+#include "weapon_ball/object/weapon.hpp"
 
 Weapon::Weapon(std::shared_ptr<Ball> bearer, const std::string & sprite_path, float attack_power,
   float attack_speed)
 : bearer(bearer), attack_power(attack_power), attack_speed(attack_speed)
 {
-  setSprite(sprite_path);
+  set_sprite(sprite_path);
 }
 
 Weapon::~Weapon() { UnloadTexture(sprite); }
 
-void Weapon::update(float dt)
-{
-  angle += PI * attack_speed * dt;
-}
+void Weapon::update(float dt) { angle += PI * attack_speed * dt * (-1 + 2 * clockwise_rotation); }
 
 void Weapon::draw()
 {
@@ -26,7 +23,7 @@ void Weapon::draw()
     angle * RAD2DEG, 1.0, WHITE);
 }
 
-void Weapon::setSprite(const std::string & sprite_path)
+void Weapon::set_sprite(const std::string & sprite_path)
 {
   Image sprite_image = LoadImage(sprite_path.c_str());
   ImageResize(&sprite_image, WEAPON_SPRITE_SIZE, WEAPON_SPRITE_SIZE);
