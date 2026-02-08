@@ -8,8 +8,6 @@
 #include <memory>
 #include <string>
 
-#define WEAPON_SPRITE_SIZE 64
-
 class Weapon : Object
 {
 public:
@@ -20,20 +18,31 @@ public:
   void update(float dt) override;
   void draw() override;
 
+  bool is_colliding(Weapon & other);
+  void respond_collision(Weapon & other);
+
+  bool is_colliding(Ball & other);
+  void respond_collision(Ball & other);
+
+  const Texture2D & get_sprite();
+  void resize_sprite(int width = -1, int height = -1);
   void set_sprite(const std::string & sprite_path);
 
   float attack_power;
   float attack_speed;
 
-  float padding = 5;
+  float padding;
+
+  bool draw_hitbox;
 
 private:
-  Texture2D sprite;
-
   std::shared_ptr<Ball> bearer;
 
   float angle;
   bool clockwise_rotation;
+
+  Texture2D sprite;
+  Image sprite_image;
 };
 
 #endif  // WEAPON_HPP

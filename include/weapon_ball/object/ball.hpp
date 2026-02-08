@@ -11,8 +11,8 @@
 class Ball : public Object
 {
 public:
-  Ball(Vector2 pos, float radius, Color color, Vector2 vel = Vector2Zero());
-  Ball(Vector2 pos, float radius, Color color, std::mt19937 & rng);
+  Ball(Vector2 pos, float radius, Color color = GRAY, Vector2 vel = Vector2Zero());
+  Ball(Vector2 pos, float radius, std::mt19937 & rng, Color color = GRAY);
 
   void update(float dt) override;
   void draw() override;
@@ -25,15 +25,19 @@ public:
   bool is_colliding(Ball & other);
   void respond_collision(Ball & other);
 
-  float get_kinetic_energy();
+  void set_mass(float mass);
+  float get_mass();
 
-  float mass = 100;
+  float get_kinetic_energy();
 
   Vector2 pos;
   Vector2 vel;
   float radius;
 
   Color color;
+
+private:
+  float mass;
 };
 
 #endif  // BALL_HPP

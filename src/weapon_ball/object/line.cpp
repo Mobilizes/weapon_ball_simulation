@@ -2,12 +2,9 @@
 
 #include <raymath.h>
 
-Line::Line(Vector2 pos_start, Vector2 pos_end, float width, Color color) : Object()
+Line::Line(Vector2 pos_start, Vector2 pos_end, float width, Color color)
+: Object(), pos_start(pos_start), pos_end(pos_end), width(width), color(color)
 {
-  this->pos_start = pos_start;
-  this->pos_end = pos_end;
-  this->width = width;
-  this->color = color;
 }
 
 void Line::update(float dt) {}

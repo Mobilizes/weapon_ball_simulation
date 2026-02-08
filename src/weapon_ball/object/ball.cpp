@@ -4,24 +4,19 @@
 
 #include <raymath.h>
 
-#include <memory>
 #include <stdexcept>
 
-Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel) : Object()
+Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel)
+: pos(pos), vel(vel), radius(radius), color(color)
 {
-  this->pos = pos;
-  this->radius = radius;
-  this->color = color;
-  this->vel = vel;
+  set_mass(1.0f);
 }
 
-Ball::Ball(Vector2 pos, float radius, Color color, std::mt19937 & rng) : Object()
+Ball::Ball(Vector2 pos, float radius, std::mt19937 & rng, Color color) : Ball(pos, radius, color)
 {
-  this->pos = pos;
-  this->radius = radius;
-  this->color = color;
-  this->vel = {std::uniform_real_distribution<float>(-100, 100)(rng),
-    std::uniform_real_distribution<float>(-100, 100)(rng)};
+  this->vel = {std::uniform_real_distribution<float>(-1, 1)(rng),
+    std::uniform_real_distribution<float>(-1, 1)(rng)};
+  this->vel = Vector2Scale(Vector2Normalize(this->vel), RANDOM_VEL_MAGNITUDE);
 }
 
 void Ball::update(float dt)
@@ -74,7 +69,7 @@ void Ball::respond_collision(Line & other)
   float dot = Vector2DotProduct(vel, normal);
 
   if (dot < 0) {
-    vel = vel - Vector2Scale(normal, 2.0 * dot);
+    vel = vel - Vector2AddValue(Vector2Scale(normal, 2.0 * dot), 0.f);
   }
 
   pos = pos + Vector2Scale(normal, radius - Vector2Length(diff));
@@ -102,17 +97,20 @@ void Ball::respond_collision(Ball & other)
                                                   Vector2LengthSqr(pos - other.pos) +
                                                 EPSILON),
                 (2 * other.mass) / (mass + other.mass + EPSILON));
-  other.vel = other.vel - Vector2Scale(Vector2Scale(other.pos - pos,
-                                         Vector2DotProduct(other.vel - temp_vel, other.pos - pos) /
-                                             Vector2LengthSqr(other.pos - pos) +
-                                           EPSILON),
-                            (2 * mass) / (mass + other.mass + EPSILON));
+  other.vel = other.vel - (Vector2Scale(Vector2Scale(other.pos - pos,
+                                          Vector2DotProduct(other.vel - temp_vel, other.pos - pos) /
+                                              Vector2LengthSqr(other.pos - pos) +
+                                            EPSILON),
+                            (2 * mass) / (mass + other.mass + EPSILON)));
 
-  float mass_ratio = other.mass / (mass + other.mass + EPSILON);
+  float mass_ratio = other.mass / (mass + other.mass);
   float penetration = radius + other.radius - Vector2Length(pos - other.pos);
 
   pos += Vector2Normalize(pos - other.pos) * penetration * mass_ratio;
   other.pos -= Vector2Normalize(pos - other.pos) * penetration * (1 - mass_ratio);
 }
+
+void Ball::set_mass(float mass) { this->mass = std::max(mass, EPSILON); }
+float Ball::get_mass() { return mass; }
 
 float Ball::get_kinetic_energy() { return 0.5f * mass * Vector2Length(vel) * Vector2Length(vel); }

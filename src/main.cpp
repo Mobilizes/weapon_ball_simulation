@@ -2,25 +2,15 @@
 #include "weapon_ball/object/line.hpp"
 #include "weapon_ball/object/weapon.hpp"
 #include "weapon_ball/utils/constants.hpp"
+#include "weapon_ball/utils/partition.hpp"
 
 #include <raylib.h>
 #include <raymath.h>
 
+#include <iostream>
 #include <memory>
 #include <random>
 #include <vector>
-
-template <typename T>
-class DynamicPartition
-{
-public:
-  DynamicPartition() : partition(UNIFORM_PARTITION_ROW * UNIFORM_PARTITION_COL) {}
-
-  std::vector<T> & get(int row, int col) { return partition[row * UNIFORM_PARTITION_COL + col]; }
-
-private:
-  std::vector<std::vector<T>> partition;
-};
 
 int main(void)
 {
@@ -32,8 +22,8 @@ int main(void)
   std::mt19937 rng(rd());
 
   std::vector<std::shared_ptr<Ball>> balls = {
-    std::make_shared<Ball>(Vector2{300, 300}, 30, RED, rng),
-    std::make_shared<Ball>(Vector2{500, 300}, 30, BLUE, rng)};
+    std::make_shared<Ball>(Vector2{300, 300}, 30, rng, RED),
+    std::make_shared<Ball>(Vector2{500, 300}, 30, rng, BLUE)};
 
   std::vector<std::shared_ptr<Line>> lines = {
     std::make_shared<Line>(Vector2{200, 100}, Vector2{200, 500}, 4, BLACK),
@@ -43,7 +33,7 @@ int main(void)
   };
 
   std::vector<std::shared_ptr<Weapon>> weapons = {
-    std::make_shared<Weapon>(balls[0], "assets/sword.png", 0, 0.5)};
+    std::make_shared<Weapon>(balls[0], "assets/sword.png", 0, 1.5)};
 
   while (!WindowShouldClose()) {
     ClearBackground(RAYWHITE);
@@ -120,14 +110,14 @@ int main(void)
       line->draw();
     }
 
-    for (std::shared_ptr<Ball> & ball : balls) {
-      ball->update(dt);
-      ball->draw();
-    }
-
     for (std::shared_ptr<Weapon> & weapon : weapons) {
       weapon->update(dt);
       weapon->draw();
+    }
+
+    for (std::shared_ptr<Ball> & ball : balls) {
+      ball->update(dt);
+      ball->draw();
     }
 
     EndDrawing();
