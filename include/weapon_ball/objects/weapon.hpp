@@ -1,9 +1,9 @@
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
 
-#include "weapon_ball/object/object.hpp"
+#include "weapon_ball/objects/object.hpp"
 
-#include "weapon_ball/object/ball.hpp"
+#include "weapon_ball/objects/ball.hpp"
 
 #include <memory>
 #include <string>
@@ -35,7 +35,7 @@ public:
 
   bool draw_hitbox;
 
-private:
+protected:
   std::shared_ptr<Ball> bearer;
 
   float angle;

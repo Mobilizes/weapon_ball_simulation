@@ -1,4 +1,4 @@
-#include "weapon_ball/object/weapon.hpp"
+#include "weapon_ball/objects/weapon.hpp"
 
 Weapon::Weapon(std::shared_ptr<Ball> bearer, const std::string & sprite_path, float attack_power,
   float attack_speed)
@@ -23,6 +23,8 @@ void Weapon::update(float dt) { angle += PI * attack_speed * dt * (-1 + 2 * cloc
 
 void Weapon::draw()
 {
+  if (!bearer) return;
+
   Vector2 orbit_pos = bearer->pos;
   orbit_pos.y -= bearer->radius + sprite.height / 2.f + padding;
 
@@ -30,6 +32,9 @@ void Weapon::draw()
 
   DrawTextureEx(sprite, Vector2Rotate(orbit_pos_anchor - bearer->pos, angle) + bearer->pos,
     angle * RAD2DEG, 1.0, WHITE);
+
+  if (draw_hitbox) {
+  }
 }
 
 bool is_colliding(Weapon & other);

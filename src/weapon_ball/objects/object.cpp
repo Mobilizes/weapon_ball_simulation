@@ -1,4 +1,4 @@
-#include "weapon_ball/object/object.hpp"
+#include "weapon_ball/objects/object.hpp"
 
 Object::Object() : id(count++) {}
 Object::Object(const Object & other) : id(count++) {}

@@ -1,4 +1,4 @@
-#include "weapon_ball/object/line.hpp"
+#include "weapon_ball/objects/line.hpp"
 
 #include <raymath.h>
 

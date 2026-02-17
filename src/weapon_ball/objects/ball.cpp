@@ -1,9 +1,10 @@
-#include "weapon_ball/object/ball.hpp"
+#include "weapon_ball/objects/ball.hpp"
 
 #include "weapon_ball/utils/constants.hpp"
 
 #include <raymath.h>
 
+#include <climits>
 #include <stdexcept>
 
 Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel)
@@ -21,8 +22,8 @@ Ball::Ball(Vector2 pos, float radius, std::mt19937 & rng, Color color) : Ball(po
 
 void Ball::update(float dt)
 {
-  float max_vel_x = MAX_VEL_X == 0 ? MAXFLOAT : MAX_VEL_X;
-  float max_vel_y = MAX_VEL_Y == 0 ? MAXFLOAT : MAX_VEL_Y;
+  float max_vel_x = MAX_VEL_X == 0 ? INT_MAX : MAX_VEL_X;
+  float max_vel_y = MAX_VEL_Y == 0 ? INT_MAX : MAX_VEL_Y;
 
   vel.x = Clamp(vel.x, -max_vel_x, max_vel_x);
   vel.y = Clamp(vel.y + GRAVITY * dt, -max_vel_y, max_vel_y);
