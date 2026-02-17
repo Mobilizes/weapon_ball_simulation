@@ -30,7 +30,6 @@ public:
 
   float get_kinetic_energy();
 
-  Vector2 pos;
   Vector2 vel;
   float radius;
 

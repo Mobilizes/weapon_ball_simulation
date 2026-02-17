@@ -6,7 +6,7 @@
 class Object
 {
 public:
-  Object();
+  Object(Vector2 pos);
   Object(const Object & other);
 
   virtual void update(float dt) = 0;

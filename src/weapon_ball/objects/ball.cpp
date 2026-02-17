@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 Ball::Ball(Vector2 pos, float radius, Color color, Vector2 vel)
-: pos(pos), vel(vel), radius(radius), color(color)
+: Object(pos), vel(vel), radius(radius), color(color)
 {
   set_mass(1.0f);
 }
@@ -46,7 +46,9 @@ bool Ball::out_of_bounds()
 
 bool Ball::is_colliding(Line & other)
 {
-  float area = abs(Vector2CrossProduct(other.pos_start - this->pos, other.pos_end - this->pos)) / 2;
+  float area =
+    abs(Vector2CrossProduct(other.get_pos_start() - this->pos, other.get_pos_end() - this->pos)) /
+    2;
   float height = 2.0 * area / other.length();
 
   bool colliding = height <= radius;
@@ -59,11 +61,12 @@ void Ball::respond_collision(Line & other)
     throw std::runtime_error("Ball responding collision to non-colliding line!");
   }
 
-  float t = Clamp(Vector2DotProduct(pos - other.pos_start, other.pos_end - other.pos_start) /
-                    (other.length_sqr() + EPSILON),
+  float t = Clamp(
+    Vector2DotProduct(pos - other.get_pos_start(), other.get_pos_end() - other.get_pos_start()) /
+      (other.length_sqr() + EPSILON),
     0.0, 1.0);
 
-  Vector2 closest = other.pos_start * (1 - t) + other.pos_end * t;
+  Vector2 closest = other.get_pos_start() * (1 - t) + other.get_pos_end() * t;
   Vector2 diff = pos - closest;
   Vector2 normal = Vector2Normalize(diff);
 

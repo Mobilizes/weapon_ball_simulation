@@ -43,11 +43,11 @@ void update_draw_frame()
   }
 
   for (std::shared_ptr<Line> line : lines) {
-    int start_row = std::min(line->pos_start.y / ROW_INC, line->pos_end.y / ROW_INC);
-    int end_row = std::max(line->pos_start.y / ROW_INC, line->pos_end.y / ROW_INC);
+    int start_row = std::min(line->get_pos_start().y / ROW_INC, line->get_pos_end().y / ROW_INC);
+    int end_row = std::max(line->get_pos_start().y / ROW_INC, line->get_pos_end().y / ROW_INC);
 
-    int start_col = std::min(line->pos_start.x / COL_INC, line->pos_end.x / COL_INC);
-    int end_col = std::max(line->pos_start.x / COL_INC, line->pos_end.x / COL_INC);
+    int start_col = std::min(line->get_pos_start().x / COL_INC, line->get_pos_end().x / COL_INC);
+    int end_col = std::max(line->get_pos_start().x / COL_INC, line->get_pos_end().x / COL_INC);
 
     for (int row = start_row; row <= end_row; ++row) {
       for (int col = start_col; col <= end_col; ++col) {
@@ -116,10 +116,10 @@ int main(void)
     std::make_shared<Ball>(Vector2{500, 300}, 30, rng, BLUE)};
 
   lines = {
-    std::make_shared<Line>(Vector2{200, 100}, Vector2{200, 500}, 4, BLACK),
-    std::make_shared<Line>(Vector2{600, 100}, Vector2{600, 500}, 4, BLACK),
-    std::make_shared<Line>(Vector2{200, 100}, Vector2{600, 100}, 4, BLACK),
-    std::make_shared<Line>(Vector2{200, 500}, Vector2{600, 500}, 4, BLACK),
+    std::make_shared<Line>(Vector2{200, 300}, Vector2{0, -200}, Vector2{0, 200}),
+    std::make_shared<Line>(Vector2{600, 300}, Vector2{0, -200}, Vector2{0, 200}),
+    std::make_shared<Line>(Vector2{400, 100}, Vector2{-200, 0}, Vector2{200, 0}),
+    std::make_shared<Line>(Vector2{400, 500}, Vector2{-200, 0}, Vector2{200, 0}),
   };
 
   weapons = {std::make_shared<Weapon>(balls[0], "assets/sword.png", 0, 1.5)};

@@ -2,7 +2,8 @@
 
 Weapon::Weapon(std::shared_ptr<Ball> bearer, const std::string & sprite_path, float attack_power,
   float attack_speed)
-: bearer(bearer),
+: Object(bearer->pos),
+  bearer(bearer),
   attack_power(attack_power),
   attack_speed(attack_speed),
   padding(0.f),
