@@ -15,5 +15,5 @@ void Line::draw() { DrawLineEx(get_pos_start(), get_pos_end(), width, color); }
 float Line::length() { return Vector2Distance(get_pos_start(), get_pos_end()); }
 float Line::length_sqr() { return Vector2DistanceSqr(get_pos_start(), get_pos_end()); }
 
-Vector2 Line::get_pos_start() { return pos + vector_start; }
-Vector2 Line::get_pos_end() { return pos + vector_end; }
+Vector2 Line::get_pos_start() { return pos() + vector_start; }
+Vector2 Line::get_pos_end() { return pos() + vector_end; }

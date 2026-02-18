@@ -1,9 +1,8 @@
 #include "weapon_ball/objects/weapon.hpp"
 
-Weapon::Weapon(std::shared_ptr<Ball> bearer, const std::string & sprite_path, float attack_power,
+Weapon::Weapon(std::shared_ptr<Ball> parent, const std::string & sprite_path, float attack_power,
   float attack_speed)
-: Object(bearer->pos),
-  bearer(bearer),
+: AttachableObject(parent->pos(), std::dynamic_pointer_cast<::Object>(parent)),
   attack_power(attack_power),
   attack_speed(attack_speed),
   padding(0.f),
@@ -24,14 +23,12 @@ void Weapon::update(float dt) { angle += PI * attack_speed * dt * (-1 + 2 * cloc
 
 void Weapon::draw()
 {
-  if (!bearer) return;
-
-  Vector2 orbit_pos = bearer->pos;
-  orbit_pos.y -= bearer->radius + sprite.height / 2.f + padding;
+  Vector2 orbit_pos = parent->pos();
+  orbit_pos.y -= bearer()->radius + sprite.height / 2.f + padding;
 
   Vector2 orbit_pos_anchor = {orbit_pos.x - sprite.width / 2.f, orbit_pos.y - sprite.height / 2.f};
 
-  DrawTextureEx(sprite, Vector2Rotate(orbit_pos_anchor - bearer->pos, angle) + bearer->pos,
+  DrawTextureEx(sprite, Vector2Rotate(orbit_pos_anchor - bearer()->pos(), angle) + bearer()->pos(),
     angle * RAD2DEG, 1.0, WHITE);
 
   if (draw_hitbox) {
@@ -61,3 +58,5 @@ void Weapon::set_sprite(const std::string & sprite_path)
   sprite_image = LoadImage(sprite_path.c_str());
   sprite = LoadTextureFromImage(sprite_image);
 }
+
+std::shared_ptr<Ball> Weapon::bearer() { return std::static_pointer_cast<Ball>(parent); }

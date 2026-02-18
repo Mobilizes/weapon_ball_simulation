@@ -1,17 +1,17 @@
 #ifndef WEAPON_HPP
 #define WEAPON_HPP
 
-#include "weapon_ball/objects/object.hpp"
+#include "weapon_ball/objects/attachable_object.hpp"
 
 #include "weapon_ball/objects/ball.hpp"
 
 #include <memory>
 #include <string>
 
-class Weapon : Object
+class Weapon : AttachableObject
 {
 public:
-  Weapon(std::shared_ptr<Ball> bearer, const std::string & sprite_path = "assets/placeholder.jpg",
+  Weapon(std::shared_ptr<Ball> parent, const std::string & sprite_path = "assets/placeholder.jpg",
     float attack_power = 0, float attack_speed = 0.5);
   ~Weapon();
 
@@ -36,7 +36,7 @@ public:
   bool draw_hitbox;
 
 protected:
-  std::shared_ptr<Ball> bearer;
+  std::shared_ptr<Ball> bearer();
 
   float angle;
   bool clockwise_rotation;

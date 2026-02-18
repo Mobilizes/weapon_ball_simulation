@@ -1,3 +1,4 @@
+#include "weapon_ball/objects/attachable_object.hpp"
 #include "weapon_ball/objects/ball.hpp"
 #include "weapon_ball/objects/line.hpp"
 #include "weapon_ball/objects/weapon.hpp"
@@ -27,13 +28,13 @@ void update_draw_frame()
   DynamicPartition<std::shared_ptr<Line>> line_partition;
 
   for (std::shared_ptr<Ball> & ball : balls) {
-    int start_row = std::max(0, (int)((ball->pos.y - ball->radius) / ROW_INC));
+    int start_row = std::max(0, (int)((ball->pos().y - ball->radius) / ROW_INC));
     int end_row =
-      std::min(UNIFORM_PARTITION_ROW - 1, (int)((ball->pos.y + ball->radius) / ROW_INC));
+      std::min(UNIFORM_PARTITION_ROW - 1, (int)((ball->pos().y + ball->radius) / ROW_INC));
 
-    int start_col = std::max(0, (int)((ball->pos.x - ball->radius) / COL_INC));
+    int start_col = std::max(0, (int)((ball->pos().x - ball->radius) / COL_INC));
     int end_col =
-      std::min(UNIFORM_PARTITION_COL - 1, (int)((ball->pos.x + ball->radius) / COL_INC));
+      std::min(UNIFORM_PARTITION_COL - 1, (int)((ball->pos().x + ball->radius) / COL_INC));
 
     for (int row = start_row; row <= end_row; ++row) {
       for (int col = start_col; col <= end_col; ++col) {
